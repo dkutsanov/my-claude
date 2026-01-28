@@ -1,0 +1,18 @@
+{
+  "model": "opus",
+  "permissions": {
+    "allow": [
+      "Bash(git stash push:*)",
+      "Bash(git stash:*)",
+      "Bash(ls:*)",
+      "Bash(./gradlew:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git reset:*)",
+      "Bash(done)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(find:*)"
+    ]
+  }
+}

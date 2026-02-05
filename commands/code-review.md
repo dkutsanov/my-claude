@@ -53,7 +53,7 @@ Parse the argument to determine the review target:
    - For each branch, find merge-base: `git merge-base HEAD <branch>`
    - Count commits from merge-base to HEAD: `git rev-list --count <merge-base>..HEAD`
    - The branch with the **fewest commits back** (closest merge-base) is the likely parent
-   - If no other branches exist, fall back to `main`, `master`, or `develop` if they exist as remote tracking branches
+   - If no other branches exist, fall back to `main`, `master`, or `develop` if they exist as remote tracking branches. In this case update the fallback branch to retrieve potential changes not yet pulled to the local repository.
 
 4. **Confirm scope with user** using `AskUserQuestion`:
 

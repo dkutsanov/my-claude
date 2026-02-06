@@ -10,36 +10,65 @@ DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0')
 # Colors mapped from .p10k.zsh (classic powerline style)
 BG_BASE='\033[48;5;238m'       # Background (POWERLEVEL9K_BACKGROUND=238)
 FG_DIR='\033[38;5;31m'         # Directory (POWERLEVEL9K_DIR_FOREGROUND=31)
+FG_DIR_ANCHOR='\033[1;38;5;39m' # Last folder bold (POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=39)
 FG_BRANCH='\033[38;5;76m'     # Git branch (POWERLEVEL9K_VCS_CLEAN_FOREGROUND=76)
 FG_MODEL='\033[38;5;134m'     # Model name (purple accent)
 FG_COST='\033[38;5;178m'      # Cost (gold, matches p10k modified accent)
 FG_TIME='\033[38;5;66m'       # Time (POWERLEVEL9K_TIME_FOREGROUND=66)
-FG_SEP='\033[38;5;246m'       # Subsegment separator (POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR color)
-FG_END='\033[38;5;238m'       # End arrow (fg matches bar bg for pointy effect)
+FG_SEP='\033[38;5;246m'       # Subsegment separator color
+FG_ARROW='\033[38;5;238m'     # Arrow color (fg matches segment bg for transition)
 RESET='\033[0m'
 
-# Powerline glyphs (literal UTF-8 characters)
-SEP_CHAR=''  # U+E0B1 thin separator
-END_CHAR=''  # U+E0B0 pointy end arrow
+# Powerline glyphs
+LEFT_SEP=''    # U+E0B1 thin right-pointing (between left segments)
+LEFT_END=''    # U+E0B0 right-pointing arrow (left prompt end)
+RIGHT_START=''  # U+E0B2 left-pointing arrow (right prompt start)
+RIGHT_SEP=''    # U+E0B3 thin left-pointing (between right segments)
 
-# Formatting
+# Terminal width - try multiple methods since stdin is piped
+if [ -n "$COLUMNS" ]; then
+    COLS=$COLUMNS
+elif [ -e /dev/tty ]; then
+    COLS=$(stty size </dev/tty 2>/dev/null | cut -d' ' -f2)
+fi
+COLS=${COLS:-$(tput cols 2>/dev/null)}
+COLS=${COLS:-120}
+
+# Formatting - split path so last folder is bold (p10k anchor style)
 T_DIR="${DIR/#$HOME/~}"
-SEP=" ${FG_SEP}${SEP_CHAR} "
+DIR_PARENT="${T_DIR%/*}/"
+DIR_LAST="${T_DIR##*/}"
+if [ "$T_DIR" = "~" ]; then DIR_PARENT=""; DIR_LAST="~"; fi
 MINS=$((DURATION_MS / 60000)); SECS=$(((DURATION_MS % 60000) / 1000))
 COST_FMT=$(printf '$%.2f' "$COST")
 
 # Branch logic
 BRANCH_NAME=$(git branch --show-current 2>/dev/null)
-BRANCH_STR=""
-if [ -n "$BRANCH_NAME" ]; then
-    BRANCH_STR="${SEP}${FG_BRANCH}${BRANCH_NAME}"
-fi
 
 # Context usage color logic
 if [ "$PCT" -ge 90 ]; then PCT_COLOR='\033[38;5;196m'    # Red
 elif [ "$PCT" -ge 70 ]; then PCT_COLOR='\033[38;5;214m'  # Orange
 else PCT_COLOR='\033[38;5;76m'; fi                        # Green (matches branch/OK color)
 
-# Constructing the bar
-# Sequence: [DIR] > [BRANCH] > [MODEL] > [PCT%] > [COST] > [TIME] ▶
-echo -e "${BG_BASE} ${FG_DIR}${T_DIR}${BRANCH_STR}${SEP}${FG_MODEL}${MODEL}${SEP}${PCT_COLOR}${PCT}%${SEP}${FG_COST}${COST_FMT}${SEP}${FG_TIME}${MINS}m ${SECS}s ${RESET}${FG_END}${END_CHAR}${RESET}"
+# Build left side: [BG] DIR > BRANCH [RESET][arrow>]
+LEFT_PLAIN=" $DIR_PARENT$DIR_LAST "
+LEFT_FMT="${BG_BASE} ${FG_DIR}${DIR_PARENT}${FG_DIR_ANCHOR}${DIR_LAST}\033[22m"
+if [ -n "$BRANCH_NAME" ]; then
+    LEFT_PLAIN="${LEFT_PLAIN}. $BRANCH_NAME "
+    LEFT_FMT="${LEFT_FMT} ${FG_SEP}${LEFT_SEP} ${FG_BRANCH}${BRANCH_NAME}"
+fi
+LEFT_PLAIN="${LEFT_PLAIN}."
+LEFT_FMT="${LEFT_FMT} ${RESET}${FG_ARROW}${LEFT_END}"
+
+# Build right side: [<arrow][BG] MODEL > PCT% > COST > TIME [RESET]
+RIGHT_PLAIN=". $MODEL . ${PCT}% . $COST_FMT . ${MINS}m ${SECS}s "
+RIGHT_FMT="${FG_ARROW}${RIGHT_START}${BG_BASE} ${FG_MODEL}${MODEL} ${FG_SEP}${RIGHT_SEP} ${PCT_COLOR}${PCT}% ${FG_SEP}${RIGHT_SEP} ${FG_COST}${COST_FMT} ${FG_SEP}${RIGHT_SEP} ${FG_TIME}${MINS}m ${SECS}s ${RESET}"
+
+# Calculate gap (no background in the middle)
+LEFT_LEN=${#LEFT_PLAIN}
+RIGHT_LEN=${#RIGHT_PLAIN}
+GAP_LEN=$((COLS - LEFT_LEN - RIGHT_LEN - 4))
+if [ "$GAP_LEN" -lt 1 ]; then GAP_LEN=1; fi
+GAP=$(printf "%${GAP_LEN}s" "")
+
+echo -e "${LEFT_FMT}${RESET}${GAP}${RIGHT_FMT}"

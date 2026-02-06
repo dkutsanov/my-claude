@@ -14,5 +14,9 @@
       "WebFetch(domain:github.com)",
       "Bash(find:*)"
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
   }
 }

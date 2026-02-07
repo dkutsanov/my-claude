@@ -40,6 +40,13 @@ DIR_PARENT="${T_DIR%/*}/"
 DIR_LAST="${T_DIR##*/}"
 if [ "$T_DIR" = "~" ]; then DIR_PARENT=""; DIR_LAST="~"; fi
 MINS=$((DURATION_MS / 60000)); SECS=$(((DURATION_MS % 60000) / 1000))
+if [ "$MINS" -ge 60 ]; then
+    HOURS=$((MINS / 60)); RMINS=$((MINS % 60))
+    if [ "$RMINS" -gt 0 ]; then TIME_FMT="${HOURS}h ${RMINS}m"
+    else TIME_FMT="${HOURS}h"; fi
+else
+    TIME_FMT="${MINS}m ${SECS}s"
+fi
 COST_FMT=$(printf '$%.2f' "$COST")
 
 # Branch logic
@@ -61,8 +68,8 @@ LEFT_PLAIN="${LEFT_PLAIN}."
 LEFT_FMT="${LEFT_FMT} ${RESET}${FG_ARROW}${LEFT_END}"
 
 # Build right side: [<arrow][BG] MODEL > PCT% > COST > TIME [RESET]
-RIGHT_PLAIN=". $MODEL . ${PCT}% . $COST_FMT . ${MINS}m ${SECS}s "
-RIGHT_FMT="${FG_ARROW}${RIGHT_START}${BG_BASE} ${FG_MODEL}${MODEL} ${FG_SEP}${RIGHT_SEP} ${PCT_COLOR}${PCT}% ${FG_SEP}${RIGHT_SEP} ${FG_COST}${COST_FMT} ${FG_SEP}${RIGHT_SEP} ${FG_TIME}${MINS}m ${SECS}s ${RESET}"
+RIGHT_PLAIN=". $MODEL . ${PCT}% . $COST_FMT . ${TIME_FMT} "
+RIGHT_FMT="${FG_ARROW}${RIGHT_START}${BG_BASE} ${FG_MODEL}${MODEL} ${FG_SEP}${RIGHT_SEP} ${PCT_COLOR}${PCT}% ${FG_SEP}${RIGHT_SEP} ${FG_COST}${COST_FMT} ${FG_SEP}${RIGHT_SEP} ${FG_TIME}${TIME_FMT} ${RESET}"
 
 # Calculate gap (no background in the middle)
 LEFT_LEN=${#LEFT_PLAIN}

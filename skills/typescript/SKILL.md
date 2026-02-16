@@ -155,6 +155,10 @@ it('should have error location', () => {
 | `expect` inside `if`/`catch` | Move expects outside conditional blocks |
 | Creating interfaces prematurely | Wait until multiple implementations exist |
 
+## Post-Implementation Verification
+
+After finishing any implementation work (new code, modifications, or refactoring), always run a TypeScript compilation check to catch type errors early. Use the project's typecheck command (e.g., `yarn typecheck`, `npx tsc --noEmit`, or the equivalent configured in the project). Fix any type errors before considering the work complete.
+
 ## Code Review Checklist
 
 Before finalizing TypeScript code:
@@ -165,6 +169,7 @@ Before finalizing TypeScript code:
 - [ ] No conditional `expect` calls in tests
 - [ ] Code is self-documenting with clear names
 - [ ] Comments are minimal and add real value
+- [ ] TypeScript compilation passes with no errors
 
 ## Examples
 

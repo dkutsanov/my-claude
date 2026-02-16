@@ -1,20 +1,42 @@
 {
-  "model": "opus",
   "permissions": {
     "allow": [
       "Bash(git stash push:*)",
       "Bash(git stash:*)",
-      "Bash(ls:*)",
-      "Bash(./gradlew:*)",
       "Bash(git checkout:*)",
       "Bash(git pull:*)",
       "Bash(git reset:*)",
+      "Bash(git diff:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git log:*)",
+      "Bash(git remote:*)",
+      "Bash(git config:*)",
+      "Bash(git status:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git worktree:*)",
+      "Bash(git merge-base:*)",
+      "Bash(ls:*)",
+      "Bash(./gradlew:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker-compose:*)",
+      "Bash(docker ps:*)",
+      "Bash(command -v:*)",
+      "Bash(lsof:*)",
+      "Bash(find:*)",
+      "Bash(gh api:*)",
+      "Bash(node -e:*)",
       "Bash(done)",
       "WebSearch",
-      "WebFetch(domain:github.com)",
-      "Bash(find:*)"
+      "WebFetch(domain:github.com)"
     ]
   },
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"

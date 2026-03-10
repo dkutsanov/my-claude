@@ -22,9 +22,9 @@ if [ "$THEME" = "classic" ]; then
     FG_SEP='\033[38;5;246m'
     FG_ARROW='\033[38;5;238m'
 else
-    # Rainbow: per-segment colored backgrounds (matching p10k rainbow preset)
-    # Color numbers used for both bg (48;5;N) and transition arrow fg (38;5;N)
-    CN_DIR=4; CN_BRANCH=2; CN_MODEL=5; CN_COST=3; CN_TIME=7
+    # Rainbow left, tmux grey gradient right
+    # Left side: p10k rainbow colors
+    CN_DIR=4; CN_BRANCH=2
 
     BG_DIR="\033[48;5;${CN_DIR}m"
     FG_DIR='\033[38;5;254m'
@@ -33,20 +33,23 @@ else
     BG_BRANCH="\033[48;5;${CN_BRANCH}m"
     FG_BRANCH='\033[38;5;0m'
 
+    # Right side: tmux-matching grey gradient (light→dark, white text)
+    CN_MODEL=244; CN_COST=239; CN_TIME=237
+
     BG_MODEL="\033[48;5;${CN_MODEL}m"
     FG_MODEL='\033[38;5;254m'
 
     BG_COST="\033[48;5;${CN_COST}m"
-    FG_COST='\033[38;5;0m'
+    FG_COST='\033[38;5;254m'
 
     BG_TIME="\033[48;5;${CN_TIME}m"
-    FG_TIME='\033[38;5;0m'
+    FG_TIME='\033[38;5;254m'
 fi
 
 # Powerline glyphs
 LEFT_SEP=''    # U+E0B1 thin right-pointing (between left segments)
-LEFT_END=''    # U+E0B0 right-pointing arrow (left prompt end)
-RIGHT_START=''  # U+E0B2 left-pointing arrow (right prompt start)
+LEFT_END=''    # U+E0BC slanted right separator (left prompt end)
+RIGHT_START=''  # U+E0BA slanted left separator (right prompt start)
 RIGHT_SEP=''    # U+E0B3 thin left-pointing (between right segments)
 
 # Terminal width - try multiple methods since stdin is piped
@@ -91,7 +94,7 @@ else
     case $PCT_LEVEL in
         critical) BG_PCT='\033[48;5;1m'; FG_PCT='\033[38;5;255m'; PCT_BG_NUM=1 ;;
         warning)  BG_PCT='\033[48;5;3m'; FG_PCT='\033[38;5;0m';   PCT_BG_NUM=3 ;;
-        healthy)  BG_PCT='\033[48;5;2m'; FG_PCT='\033[38;5;0m';   PCT_BG_NUM=2 ;;
+        healthy)  BG_PCT='\033[48;5;241m'; FG_PCT='\033[38;5;254m'; PCT_BG_NUM=241 ;;
     esac
 fi
 

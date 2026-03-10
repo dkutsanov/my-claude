@@ -31,12 +31,32 @@
       "Bash(find:*)",
       "Bash(gh api:*)",
       "Bash(node -e:*)",
+      "Bash(yarn jest:*)",
+      "Bash(yarn install:*)",
+      "Bash(yarn lint:*)",
+      "Bash(yarn typecheck:*)",
+      "Bash(pkill:*)",
+      "Bash(kill:*)",
+      "Bash(ps aux:*)",
       "Bash(done)",
       "WebSearch",
       "WebFetch(domain:github.com)"
     ]
   },
-  "model": "opus",
+  "model": "opus[1m]",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '\\a' > /dev/tty"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"

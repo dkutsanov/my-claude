@@ -45,6 +45,16 @@
   },
   "model": "opus[1m]",
   "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rm -f /tmp/claude-status-${TMUX_PANE//[^a-zA-Z0-9_-]/_}"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "permission_prompt",
@@ -60,5 +70,9 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"
+  },
+  "effortLevel": "high",
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
   }
 }

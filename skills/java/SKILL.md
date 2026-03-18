@@ -1,6 +1,6 @@
 ---
 name: java
-description: Use when writing, modifying, or reviewing Java code - applies SOLID principles, clean code practices, minimal documentation, and pragmatic abstraction to create maintainable Java applications
+description: Use when writing, modifying, or reviewing Java code. TRIGGER when the user works with .java files, mentions Java classes/packages (e.g. Spring Boot, JUnit, Maven, Gradle for Java projects), references Java-specific patterns (DTOs, POJOs, Beans, Repositories, Services), fixes Java exceptions (NullPointerException, ClassCastException), refactors Java classes, or reviews PRs touching src/main/java/. Also trigger for Android code written in Java. DO NOT trigger for Kotlin, Scala, Groovy, or non-Java JVM languages, and DO NOT trigger for infrastructure tasks (Kubernetes, CI/CD, Docker) even if they mention a Java service. Applies SOLID principles, clean code practices, minimal documentation, and pragmatic abstraction.
 ---
 
 # Java Development

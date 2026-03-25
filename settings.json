@@ -71,8 +71,8 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  "effortLevel": "high",
   "enabledPlugins": {
     "skill-creator@claude-plugins-official": true
-  }
+  },
+  "effortLevel": "high"
 }

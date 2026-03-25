@@ -1,22 +1,8 @@
 ---
+name: code-review
+description: Code review using dynamic category detection and domain-specific analysis. Use when the user asks to review code, review a PR, check a branch, or provide feedback on changes. Do NOT use for general code reading, debugging, or implementation tasks.
 allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git log:*), Bash(git rev-parse:*), Bash(git merge-base:*), Bash(git branch:*)
-description: Code review using dynamic category detection and domain-specific analysis
-argument-hint: (optional) [branch, PR#, or PR URL] - defaults to current branch
 ---
-
-## General Guidelines
-
-### Output Style
-
-- **Never explicitly mention TDD** in code, comments, commits, PRs, or issues
-- Write natural, descriptive code without meta-commentary about the development process
-- The code should speak for itself - TDD is the process, not the product
-
-Beads is available for task tracking. Use `mcp__beads__*` tools to manage issues (the user interacts via `bd` commands).
-
-## Plan File Restriction
-
-**NEVER create, read, or update plan.md files.** Claude Code's internal planning files are disabled for this project. Use other methods to track implementation progress (e.g., comments, todo lists, or external tools).
 
 # Code Review
 
@@ -26,7 +12,7 @@ Perform a code review using dynamic category detection.
 
 ### Determine What to Review
 
-Parse the argument to determine the review target:
+Parse the context to determine the review target:
 
 | Input | Action |
 |-------|--------|
@@ -262,7 +248,3 @@ Provide a ready-to-paste PR description:
 ### Follow-ups (can defer)
 - [ ] ...
 ```
-
----
-
-Review target (branch name, PR number, or PR URL - leave empty for current branch): $ARGUMENTS

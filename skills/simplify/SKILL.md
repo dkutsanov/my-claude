@@ -1,25 +1,9 @@
 ---
-description: Reduce code complexity while keeping tests green
-argument-hint: [file, function, or area to simplify]
+name: simplify
+description: Review changed code for reuse, quality, and efficiency, then fix any issues found. Use when the user asks to simplify code, reduce complexity, clean up, or make code more readable. Do NOT use for adding features, fixing bugs, or structural refactoring.
 ---
 
-## General Guidelines
-
-### Output Style
-
-- **Never explicitly mention TDD** in code, comments, commits, PRs, or issues
-- Write natural, descriptive code without meta-commentary about the development process
-- The code should speak for itself - TDD is the process, not the product
-
-Beads is available for task tracking. Use `mcp__beads__*` tools to manage issues (the user interacts via `bd` commands).
-
-**User arguments:**
-
-Simplify: $ARGUMENTS
-
-**End of user arguments**
-
-(If there was no info above, fallback to the context of the conversation)
+# Simplify
 
 Reduce complexity while keeping tests green.
 
@@ -40,7 +24,7 @@ Reduce complexity while keeping tests green.
 
 ## Prerequisites
 
-Tests must be green. If failing, use `/green` first.
+Tests must be green. If failing, fix them first.
 
 ## Code Complexity Signals
 
@@ -71,7 +55,7 @@ Look for these refactoring opportunities:
 2. Code reads more clearly
 3. No behavioral changes
 
-**Simplify** removes complexity locally. **Refactor** improves architecture broadly. Use `/refactor` if changes require structural reorganization.
+**Simplify** removes complexity locally. **Refactor** improves architecture broadly.
 
 ### Watch for Brittle Tests
 

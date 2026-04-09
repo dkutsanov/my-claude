@@ -18,6 +18,8 @@ Follows [Conventional Commits](https://www.conventionalcommits.org/) standard.
 
 2. **Content**: Write clear, concise commit messages describing what changed and why
 
+3. **No AI attribution**: Do NOT add `Co-Authored-By` trailer lines to commits
+
 ## Process
 
 1. Run `git status` and `git diff` to review changes

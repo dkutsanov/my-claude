@@ -1,13 +1,13 @@
 ---
 name: java
-description: Use when writing, modifying, or reviewing Java code. TRIGGER when the user works with .java files, mentions Java classes/packages (e.g. Spring Boot, JUnit, Maven, Gradle for Java projects), references Java-specific patterns (DTOs, POJOs, Beans, Repositories, Services), fixes Java exceptions (NullPointerException, ClassCastException), refactors Java classes, or reviews PRs touching src/main/java/. Also trigger for Android code written in Java. DO NOT trigger for Kotlin, Scala, Groovy, or non-Java JVM languages, and DO NOT trigger for infrastructure tasks (Kubernetes, CI/CD, Docker) even if they mention a Java service. Applies SOLID principles, clean code practices, minimal documentation, and pragmatic abstraction.
+description: Use when writing, modifying, or reviewing Java code. TRIGGER when the user works with .java files, mentions Java classes/packages (e.g. Spring Boot, JUnit, Maven, Gradle for Java projects), references Java-specific patterns (DTOs, POJOs, Beans, Repositories, Services), fixes Java exceptions (NullPointerException, ClassCastException), refactors Java classes, or reviews PRs touching src/main/java/. Also trigger for Android code written in Java. DO NOT trigger for Kotlin, Scala, Groovy, or non-Java JVM languages, and DO NOT trigger for infrastructure tasks (Kubernetes, CI/CD, Docker) even if they mention a Java service. Applies SOLID principles, clean code practices, purposeful documentation (WHY not WHAT), and pragmatic abstraction.
 ---
 
 # Java Development
 
 ## Overview
 
-Write clean, maintainable Java code following SOLID principles and pragmatic practices. **No Javadoc on private methods.** Favor self-documenting code over comments.
+Write clean, maintainable Java code following SOLID principles and pragmatic practices. **No Javadoc on private methods.** On public APIs, document inputs/outputs/side effects/errors; elsewhere, comment the WHY when non-obvious (see global `Code Comments` rules).
 
 ## Core Principles
 
@@ -33,13 +33,13 @@ Write clean, maintainable Java code following SOLID principles and pragmatic pra
 
 Private methods are implementation details. If they need documentation, refactor for clarity instead.
 
-**Javadoc on public APIs only when:**
+**Javadoc on public APIs** — document boundaries so callers can use them without reading the implementation. Describe:
 
-- Complex algorithm or business logic
-- Non-obvious behavior or side effects
+- Inputs, outputs, side effects
+- Error modes and exceptions thrown
 - Important constraints or assumptions
 
-**Don't document obvious methods:**
+**Skip Javadoc on trivial getters/setters** — identifier names already carry the meaning:
 
 ```java
 // ❌ BAD
@@ -101,13 +101,14 @@ private static final String DEFAULT_FORMAT = "yyyy-MM-dd";
 
 ### Comments
 
-Keep comments minimal. Use them only for:
+Comments explain what code alone cannot — the WHY, not the WHAT. Write them in these four high-value categories (see global `Code Comments` rules):
 
-- Complex algorithms or business logic
-- Non-obvious decisions or workarounds
-- Important constraints or assumptions
+- **API/Interface**: inputs, outputs, side effects, error modes on public methods
+- **Design rationale**: why this approach was chosen over alternatives
+- **Teacher/domain**: formulas, protocol rules, business invariants
+- **Dependency warnings**: when modifying X requires also touching Y
 
-**Don't comment what code obviously does.**
+**Don't restate what code obviously does** — names carry that load. Never leave commented-out code or TODO/FIXME in source; delete code (VCS remembers) and move TODOs to design docs or issue trackers.
 
 ## Common Mistakes
 
@@ -127,7 +128,7 @@ Keep comments minimal. Use them only for:
 | "This private method is complex so I should document it" | If it's complex, refactor it into smaller, clearer methods. Don't document complexity. |
 | "This helps IDE tooltips" | IDE tooltips are for public APIs. Private methods are implementation details. |
 | "Just brief Javadoc won't hurt" | Any Javadoc on private methods violates clean code. No exceptions. |
-| "This algorithm needs explanation" | Use self-documenting method names and clear variable names instead. |
+| "This algorithm needs explanation" | Yes — add a Design rationale comment at the method/file top explaining the WHY. Names alone can't carry specialist knowledge. |
 | "Future maintainers will thank me" | Future maintainers want clear code, not documented unclear code. |
 | "This getter has side effects so it needs docs" | If a getter has side effects, it shouldn't be named 'get'. Rename it. |
 

@@ -7,7 +7,7 @@ description: Use when writing, modifying, or reviewing TypeScript/JavaScript cod
 
 ## Overview
 
-Write clean, maintainable TypeScript code with proper typing and pragmatic practices. Favor self-documenting code over comments. Use strict TypeScript settings.
+Write clean, maintainable TypeScript code with proper typing and pragmatic practices. On public APIs, document inputs/outputs/side effects/errors; elsewhere, comment the WHY when non-obvious (see global `Code Comments` rules). Use strict TypeScript settings.
 
 ## Core Principles
 
@@ -31,12 +31,12 @@ Write clean, maintainable TypeScript code with proper typing and pragmatic pract
 
 Private methods are implementation details. If they need documentation, refactor for clarity instead.
 
-**JSDoc on public APIs only when:**
-- Complex algorithm or business logic
-- Non-obvious behavior or side effects
+**JSDoc on public APIs** — document boundaries so callers can use them without reading the implementation. Describe:
+- Inputs, outputs, side effects
+- Error modes and exceptions thrown
 - Important constraints or assumptions
 
-**Don't document obvious methods:**
+**Skip JSDoc on trivial getters/setters** — identifier names already carry the meaning:
 ```typescript
 // ❌ BAD
 /**
@@ -60,12 +60,13 @@ public getCustomerCount(): number { return this.customers.length; }
 - Write code that reads like prose
 
 ### Comments
-Keep comments minimal. Use them only for:
-- Complex algorithms or business logic
-- Non-obvious decisions or workarounds
-- Important constraints or assumptions
+Comments explain what code alone cannot — the WHY, not the WHAT. Write them in these four high-value categories (see global `Code Comments` rules):
+- **API/Interface**: inputs, outputs, side effects, error modes on public methods
+- **Design rationale**: why this approach was chosen over alternatives
+- **Teacher/domain**: formulas, protocol rules, business invariants
+- **Dependency warnings**: when modifying X requires also touching Y
 
-**Don't comment what code obviously does.**
+**Don't restate what code obviously does** — names carry that load. Never leave commented-out code or TODO/FIXME in source; delete code (VCS remembers) and move TODOs to design docs or issue trackers.
 
 ## Jest Testing Rules
 

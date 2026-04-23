@@ -88,3 +88,89 @@ When an API method requires type A but callers naturally have type B, add an ove
 When building features, build a tiny, end-to-end slice of the feature first, seek feedback, then expand out from there.
 
 Tracer bullets comes from the Pragmatic Programmer. When building systems, you want to write code that gets you feedback as quickly as possible. Tracer bullets are small slices of functionality that go through all layers of the system, allowing you to test and validate your approach early. This helps in identifying potential issues and ensures that the overall architecture is sound before investing significant time in development.
+
+## Code Comments
+
+Comments explain what code alone cannot — the WHY, not the WHAT. These four categories carry the most value; use them generously when applicable, not sparingly.
+
+### API/Interface comments
+
+Document public function/class/module boundaries so callers can use them without reading the implementation.
+
+- **Why**: Enables black-box reading and keeps the contract visible next to the code.
+- **How to apply**: At exported functions and module entry points, describe inputs, outputs, side effects, and error modes. Skip for private helpers where clear naming is sufficient.
+
+### Design rationale
+
+At file-top or module-level, briefly justify the chosen approach vs. obvious alternatives.
+
+- **Why**: Prevents well-meaning refactors from undoing intentional trade-offs.
+- **How to apply**: When the file implements a non-trivial algorithm, protocol, or a design where an obvious alternative was rejected. 2–4 lines, not a dissertation.
+
+### Teacher/domain comments
+
+Explain specialist knowledge (math, protocols, domain invariants) inline so non-specialists can safely contribute.
+
+- **Why**: Expands the set of people who can modify the code without damaging domain-correct logic.
+- **How to apply**: Where code encodes a formula, protocol rule, or business invariant not obvious from names. One line or a link to a reference.
+
+### Checklist/dependency comments
+
+Warn when modifying X requires also touching Y elsewhere.
+
+- **Why**: Prevents partial updates that break hidden invariants.
+- **How to apply**: At sites with hidden coupling (e.g., "if you add an enum value here, also update Z"). One line, pointing at the other site.
+
+### Anti-patterns
+
+- **Restating what code does** — names carry that load; don't write `i++; // increment i`
+- **Commenting-out code** — delete it; let VCS remember it
+- **TODO/FIXME in source** — put them in design docs or issue trackers
+
+## Code Quality
+
+### Principle of Least Surprise
+
+Match existing codebase patterns over personal preference; predictable code beats clever code.
+
+- **Why**: Other developers voluntarily improve code they can predict; surprising code slows every future reader.
+- **How to apply**: Before introducing a new idiom, library, or abstraction, check how the codebase solves similar problems and match that. Only deviate with a documented reason.
+
+### Consistency
+
+Follow the codebase's existing style, naming, and structure before introducing new patterns.
+
+- **Why**: Consistency makes inconsistency meaningful — new patterns signal new intent; if everything is bespoke, nothing stands out.
+- **How to apply**: Read a neighboring file before adding code; match its conventions (naming, error handling, layering). If the current patterns are actively wrong, propose a migration in a separate PR rather than fixing ad-hoc.
+
+## Principle Trade-offs
+
+When design principles conflict, apply these tiebreakers.
+
+### Surprises override simplicity
+
+Clever simple code loses to predictable verbose code.
+
+- **Why**: The cost of surprise compounds — every reader pays it, indefinitely.
+- **How to apply**: If a "simpler" solution requires readers to know a non-obvious trick (uncommon stdlib behavior, implicit control flow, operator overloading), prefer the longer predictable form.
+
+### Wrong abstraction > duplication
+
+Leave duplication in place rather than force a DRY extraction that doesn't quite fit.
+
+- **Why**: Wrong abstractions spread, invite conditional flags, and resist change — costing more than duplication ever did.
+- **How to apply**: If two pieces of code look similar but differ in intent, don't extract. Wait until at least three true duplicates with a genuinely stable shared shape emerge.
+
+### Measure before optimizing
+
+No performance work without profiling evidence.
+
+- **Why**: Intuition about hot paths is usually wrong; unmeasured "optimizations" often harm readability without measurable benefit.
+- **How to apply**: Produce a profile or benchmark showing the target is the bottleneck before changing code. Capture before/after numbers in the PR.
+
+### Boy Scout time-gate
+
+Clean up adjacent messy code only when the fix is quick; don't expand scope.
+
+- **Why**: Unbounded cleanup bloats PRs, obscures the actual change, and creates review fatigue.
+- **How to apply**: Fix an incidental issue only if it takes a minute and stays in-scope. Otherwise, open a follow-up. A bug fix PR shouldn't also contain renames, refactors, or unrelated reformatting.

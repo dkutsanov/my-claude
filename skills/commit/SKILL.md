@@ -18,7 +18,7 @@ Follows [Conventional Commits](https://www.conventionalcommits.org/) standard.
 
 2. **Content**: Write clear, concise commit messages describing what changed and why
 
-3. **No AI attribution**: Do NOT add `Co-Authored-By` trailer lines to commits
+3. **No AI attribution**: NEVER add `Co-Authored-By` trailer lines to commit messages (e.g. `Co-Authored-By: Claude <...>`). The user does not want AI attribution in git history. This rule applies whether you invoke this skill or fall back to a raw `git commit` command.
 
 ## Process
 

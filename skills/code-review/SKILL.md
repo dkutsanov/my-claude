@@ -91,12 +91,20 @@ Total files changed: <n>
 ...
 ```
 
+### Fetch Ticket Context
+
+Scan the PR title, branch name, and recent commit messages for a Jira ticket ID (pattern `[A-Z]+-\d+`, e.g. `SMPROD-12345`, `SP-1234`, `SSPROD-67890`).
+
+If one is found, fetch the ticket **before** Phase 1 using the `jira-tool` skill. The ticket usually contains acceptance criteria, design decisions, and constraints that are NOT visible in the diff alone. Skipping this step means the Branch Brief is inferred from code only, which misses intent mismatches.
+
+If no ticket ID is found, note "No Jira ticket referenced" and proceed.
+
 ## Phase 1: Branch Brief
 
-From the diff and recent commit messages (`git log <base>...HEAD --oneline`), infer:
+From the Jira ticket (if fetched), the diff, and recent commit messages (`git log <base>...HEAD --oneline`), infer:
 
-- **Goal**: What this branch accomplishes (1-3 sentences)
-- **Constraints**: Any implied requirements (security, performance, backwards compatibility)
+- **Goal**: What this branch accomplishes (1-3 sentences) — prefer the ticket's own stated goal if available
+- **Constraints**: Any implied requirements (security, performance, backwards compatibility) — include acceptance criteria from the ticket
 - **Success checklist**: What must work after this change, what must not break
 
 ```

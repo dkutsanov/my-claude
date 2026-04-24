@@ -1,5 +1,33 @@
 # Global Claude instructions
 
+## Output Style
+
+### Never mention TDD in the artifact
+
+Do not reference TDD, red/green/refactor, test-first development, or the development process in code comments, commit messages, PR titles/bodies, or issue descriptions. The code speaks for itself — TDD is a process, not a product. This applies whether you invoke the `/commit`, `/pr`, or `/implement` skills or fall back to raw commands.
+
+## Plan File Restriction
+
+Never create, read, or update `plan.md` files. Claude Code's internal planning files are disabled here — use tasks, comments, or external trackers instead. (Plans written via plan mode under `~/.claude/plans/` are a separate mechanism and remain allowed.)
+
+## Clean Code
+
+### No auto-doc on private methods
+
+Do not add Javadoc / JSDoc / docstrings on private methods, private constructors, or trivial getters/setters. If a private method is complex enough to need a comment, refactor it for clarity instead. Public APIs still need their boundary contract documented (inputs, outputs, side effects, error modes) — see the Code Comments section below.
+
+### Pragmatic abstraction
+
+Only introduce an interface, abstract class, or polymorphic seam when multiple implementations exist (or are imminent). Don't generalize "just in case". See also "Wrong abstraction > duplication" below.
+
+### Extract constants only when reused
+
+Extract a named constant only when the value is used in multiple places. Single-use values stay inline with clear surrounding context. Don't wrap a constant in a utility method that always returns the same value — use a `static final` field (or equivalent).
+
+### Names over comments
+
+Prefer clear, descriptive identifiers over explanatory comments. If you're tempted to write a comment explaining what a method does, rename the method first.
+
 ## Brainstorming Sessions
 
 ### Stay High-Level Until Implementation
@@ -43,6 +71,18 @@
 - What happens when one instance has updated data and another doesn't?
 - How will this affect user sessions that hit different instances?
 - Is there existing infrastructure (Redis pub/sub, etc.) for cache coordination?
+
+## Architect + Researcher Workflow
+
+When a task needs architectural options analysis, use the `architect` agent (built-in). If the architect needs information it doesn't have (code paths, existing patterns, dependencies), it should invoke the local `researcher` agent via the Task tool to gather that information objectively first.
+
+Ground rules for the architect:
+- Focus on component relationships, integration patterns, trade-offs — **never write implementation plans or step-by-step guides**
+- Produce 2-3 distinct approaches with pros/cons, complexity (Low/Medium/High), and risk
+- Write the output to `design-options.md` with a comparison matrix
+- Leave the implementation planning to `/create-tasks` and `/implement`
+
+The local `researcher` agent (see `agents/researcher.md`) has stricter guardrails than the built-in: output goes to `docs/research/YYYY-MM-DD-<topic>.md`, no "you should" / recommendations, precise `path/file.ext:line` references. Those guardrails are what make it worth keeping as a user-defined agent.
 
 ## Research Before Design Decisions
 

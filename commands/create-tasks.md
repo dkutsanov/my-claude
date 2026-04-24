@@ -1,112 +1,74 @@
 ---
-description: Create implementation plan from feature/requirement with PRD-style discovery and TDD acceptance criteria
-argument-hint: <feature/requirement description or GitHub issue URL/number>
+description: Break a feature or design into TaskCreate tasks with acceptance criteria and dependencies.
+argument-hint: <feature description | GitHub issue URL/number | path to design doc>
 ---
 
-# Create Tasks: PRD-Informed Task Planning
+# Create Tasks
 
-Create structured implementation plan that bridges product thinking (PRD) with test-driven development.
+Turn a feature, design doc, or GitHub issue into a dependency-ordered list of `TaskCreate` tasks.
 
 **User arguments:**
 
-Create-tasks: $ARGUMENTS
+$ARGUMENTS
 
 **End of user arguments**
 
-(If no input provided, check conversation context)
+If the input is empty, use the current conversation context (typically a design doc produced by `/brainstorm`).
 
-## Discovery Phase
+## Input handling
 
-Understand the requirement by asking (use AskUserQuestion if needed):
+- **Feature description** — use it directly.
+- **GitHub issue URL / number** — fetch it and extract problem, acceptance criteria, technical notes, dependencies.
+- **Path to a design doc** — read it; treat the design as authoritative.
 
-**Problem Statement**
+Discovery questions (problem, constraints, success criteria) belong in `/brainstorm`. This command assumes understanding is already there.
 
-- What problem does this solve?
-- Who experiences this problem?
-- What's the current pain point?
+## For each task, call TaskCreate
 
-**Desired Outcome**
+- **subject** — imperative, specific. "Add JWT token validation middleware", not "Auth work".
+- **activeForm** — present continuous for the spinner. "Adding JWT token validation".
+- **description** — use this shape:
 
-- What should happen after this is built?
-- How will users interact with it?
-- What does success look like?
-
-**Scope & Constraints**
-
-- What's in scope vs. out of scope?
-- Any technical constraints?
-- Dependencies on other systems/features?
-
-**Context Check**
-
-- Search codebase for related features/modules
-- Check for existing test files that might be relevant
-
-## Input Processing
-
-The input can be one of:
-
-1. **Feature Description** (e.g., "Add user authentication")
-2. **GitHub Issue URL/number** — extract problem statement, acceptance criteria, technical notes, and dependencies
-3. **Empty** — use conversation context
-
-## Create Tasks
-
-For each task, use the TaskCreate tool with:
-
-- **subject**: Action-oriented, specific title in imperative form (e.g., "Add JWT token validation middleware")
-- **description**: Include context, technical approach, and acceptance criteria
-- **activeForm**: Present continuous form for spinner display (e.g., "Adding JWT token validation")
-
-**Task Description Structure:**
-
-```
+```markdown
 ## Context
-Why this task exists and how it fits into the larger feature.
+Why this task exists and how it fits the larger feature.
 
 ## Technical Approach
-- Key interfaces/types needed
-- Algorithm or approach
-- Libraries or patterns to use
+- Key interfaces or types
+- Algorithm / pattern
+- Libraries to use
 
 ## Acceptance Criteria
-- Given-When-Then format
-- Concrete, verifiable conditions
-- Cover main case + edge cases
+- Given-When-Then bullets
+- Cover happy path + edge cases
+- Each bullet must be concretely verifiable
 ```
 
-### Set Up Dependencies
+## Dependencies
 
-After creating tasks, use TaskUpdate to establish ordering:
+After creation, call `TaskUpdate` on each task with:
+- `addBlockedBy: [ids]` — tasks that must finish first
+- `addBlocks: [ids]` — tasks this one blocks
 
-- **addBlockedBy**: Tasks that must complete before this one can start
-- **addBlocks**: Tasks that cannot start until this one completes
+Order tasks so the first one is a real starting point (no unresolved `blockedBy` links).
 
-### Beads Integration (Optional)
+## Beads (optional)
 
-If Beads MCP is available, also create Beads issues:
+If Beads MCP is available, mirror each task as a Beads issue:
 
-```bash
-bd create "Task title" \
-  --type [feature|bug|task|chore] \
-  --priority [1-3] \
-  --description "Context" \
-  --design "Technical approach" \
-  --acceptance "Given-When-Then criteria"
+```
+bd create "title" --type [feature|bug|task|chore] --priority [1-3] \
+  --description "context" --design "approach" --acceptance "Given-When-Then"
 ```
 
-Use `bd dep add` to track dependencies between Beads issues.
+Use `bd dep add` to mirror the task dependencies.
 
-## Validation
+## Self-check before finishing
 
-After creating tasks, verify:
+- [ ] Each task has concrete Given-When-Then acceptance criteria
+- [ ] Dependencies reflect real ordering (no cycles, first task is unblocked)
+- [ ] Each task is small enough to finish in one TDD cycle
 
-- Each task has clear acceptance criteria
-- Dependencies are mapped correctly
-- Tasks are ordered by implementation sequence
-- Each task is small enough to implement incrementally
+## Next command
 
-## Integration with Other Commands
-
-- **Before**: Use `/implement spike <topic>` if you need technical exploration first
-- **After**: Use `/implement red <first task>` to start on the first task
+- Run `/implement red <first task>` to start on the top unblocked task.

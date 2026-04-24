@@ -1,51 +1,25 @@
 ---
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
-argument-hint: "The feature/idea this brainstorming session is about"
+description: "Collaborative design session before implementation — refine the idea, explore 2-3 approaches, write a validated design doc to docs/plans/."
+argument-hint: "The feature/idea to brainstorm"
 ---
 
-# Brainstorming Ideas Into Designs
+# Brainstorm
 
-## Overview
+Turn an idea into a validated design through dialogue, then capture the result in a dated design doc.
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
-
-Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far.
-
-The idea that will be discussed in this brainstorming session is:
+The idea for this session:
 $ARGUMENTS
 
-## The Process
+## How to run this
 
-**Understanding the idea:**
-- Check out the current project state first (files, docs, recent commits)
-- Ask questions one at a time to refine the idea
-- Prefer multiple choice questions when possible, but open-ended is fine too
-- Only one question per message - if a topic needs more exploration, break it into multiple questions
-- Focus on understanding: purpose, constraints, success criteria
+- Start by reading the current project state (recent commits, related files, docs).
+- Ask one question at a time — prefer multiple choice over open-ended when both work. Break compound questions apart.
+- After 2-3 questions, propose 2-3 distinct approaches with trade-offs. Lead with your recommendation and the reason.
+- Once the shape is clear, present the design in 200-300-word sections (architecture, components, data flow, error handling, testing). Check alignment after each section.
+- Stay high-level until implementation — see the global CLAUDE.md "Brainstorming Sessions" section for what counts as too-low-level.
 
-**Exploring approaches:**
-- Propose 2-3 different approaches with trade-offs
-- Present options conversationally with your recommendation and reasoning
-- Lead with your recommended option and explain why
+## When done
 
-**Presenting the design:**
-- Once you believe you understand what you're building, present the design
-- Break it into sections of 200-300 words
-- Ask after each section whether it looks right so far
-- Cover: architecture, components, data flow, error handling, testing
-- Be ready to go back and clarify if something doesn't make sense
+Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md` (create the directory if needed). Commit it as its own commit.
 
-## After the Design
-
-**Documentation:**
-- Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
-- Commit the design document to git
-
-## Key Principles
-
-- **One question at a time** - Don't overwhelm with multiple questions
-- **Multiple choice preferred** - Easier to answer than open-ended when possible
-- **YAGNI ruthlessly** - Remove unnecessary features from all designs
-- **Explore alternatives** - Always propose 2-3 approaches before settling
-- **Incremental validation** - Present design in sections, validate each
-- **Be flexible** - Go back and clarify when something doesn't make sense
+After that, `/create-tasks` takes the design and breaks it into implementable tasks.

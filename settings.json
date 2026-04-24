@@ -4,26 +4,7 @@
   },
   "permissions": {
     "allow": [
-      "Bash(git stash push:*)",
-      "Bash(git stash:*)",
-      "Bash(git checkout:*)",
-      "Bash(git pull:*)",
-      "Bash(git reset:*)",
-      "Bash(git diff:*)",
-      "Bash(git fetch:*)",
-      "Bash(git merge:*)",
-      "Bash(git branch:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(git log:*)",
-      "Bash(git remote:*)",
-      "Bash(git config:*)",
-      "Bash(git status:*)",
-      "Bash(git rev-parse:*)",
-      "Bash(git rev-list:*)",
-      "Bash(git worktree:*)",
-      "Bash(git merge-base:*)",
+      "Bash(git:*)",
       "Bash(ls:*)",
       "Bash(./gradlew:*)",
       "Bash(docker compose:*)",
@@ -48,6 +29,17 @@
   },
   "model": "opus[1m]",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/allow-safe-compound-bash.sh"
+          }
+        ]
+      }
+    ],
     "SessionEnd": [
       {
         "hooks": [

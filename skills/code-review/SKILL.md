@@ -74,7 +74,7 @@ Categorize each changed file into ONE primary category based on these patterns:
 | Backend/Data | `migrations/`, `models/`, `prisma/`, `schema.*`, `*.model.*`, `*.entity.*` |
 | Tooling/Config | `scripts/`, `*.config.*`, `package.json`, `tsconfig.*`, `vite.*`, `webpack.*`, `eslint.*` |
 | CI/CD | `.github/`, `.gitlab-ci.*`, `Dockerfile`, `docker-compose.*`, `*.yml` in CI paths |
-| Tests | `*.test.*`, `*.spec.*`, `__tests__/`, `__mocks__/`, `*.stories.*` |
+| Tests | `*.test.*`, `*.spec.*`, `__tests__/`, `__mocks__/`, `*.stories.*`, `*_test.go`, `*_test.py`, `Test*.java`, `*Test.java`, `*Spec.groovy`, `*.feature` |
 | Docs | `*.md`, `docs/`, `README*`, `CHANGELOG*` |
 
 Output the categorization:

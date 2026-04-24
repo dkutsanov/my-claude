@@ -1,11 +1,11 @@
 ---
 name: implement
-description: Use when the user asks to implement a feature, add a class or method, fix a bug, refactor code, add test coverage, or run autonomously to drive work forward. Supports explicit phase selection via the first argument (red | green | refactor | forever) and infers the phase from conversation and test state when no phase is given. With no arguments at all, defaults to forever (autonomous loop). Do NOT use for code review, CI/CD setup, testing questions, infrastructure, or documentation tasks.
+description: Use when the user asks to implement a feature, add a class or method, fix a bug, refactor code, add test coverage, run autonomously to drive work forward, or explore an unfamiliar problem space with throwaway code. Supports explicit phase selection via the first argument (spike | red | green | refactor | forever) and infers the phase from conversation and test state when no phase is given. With no arguments at all, defaults to forever (autonomous loop). Do NOT use for code review, CI/CD setup, testing questions, infrastructure, or documentation tasks.
 ---
 
 # Implement
 
-Enforces the Red-Green-Refactor cycle and the autonomous `forever` driver from a single entry point. Apply the **Shared Rules** section plus **exactly one** Phase section per invocation — do not read the other phase sections.
+Enforces the Red-Green-Refactor cycle, the optional Spike pre-phase, and the autonomous `forever` driver from a single entry point. Apply the **Shared Rules** section plus **exactly one** Phase section per invocation — do not read the other phase sections.
 
 ## Phase Dispatch
 
@@ -13,9 +13,10 @@ Read `$ARGUMENTS` (the user's input after the skill name).
 
 1. **No arguments at all** → `PHASE = forever`. The user invoked `/implement` bare; they want the autonomous driver to find and execute work. This matches the intent of the old `/forever`.
 
-2. **First token matches `{red, green, refactor, forever}`** (case-insensitive) → `PHASE = that token`. The remainder of `$ARGUMENTS` is `CONTEXT` (test name, implementation description, refactoring goal, or loop seed).
+2. **First token matches `{spike, red, green, refactor, forever}`** (case-insensitive) → `PHASE = that token`. The remainder of `$ARGUMENTS` is `CONTEXT` (exploration description, test name, implementation description, refactoring goal, or loop seed).
 
 3. **Arguments present but the first token is not a phase word** → infer `PHASE` from the conversation and current test state:
+   - User says "I don't know how X works", "explore Y", "spike on Z", "figure out the API" → `spike`
    - No tests, or all tests passing, and the user describes new behavior → `red`
    - Exactly one relevant failing test → `green`
    - All relevant tests green and the user asks to clean up / rename / extract / simplify → `refactor`
@@ -96,15 +97,6 @@ Each step should address ONE specific issue:
 - Test fails "not a function" → Add method stub only
 - Test fails with assertion → Implement minimal logic only
 
-### Optional Pre-Phase: Spike Phase
-
-In rare cases where the problem space, interface, or expected behavior is unclear, a **Spike Phase** may be used **before the Red Phase**. This is **not part of the regular TDD workflow** and must only be applied under exceptional circumstances.
-
-- The goal of a Spike is **exploration and learning**, not implementation
-- Spike code is **disposable** and **must not** be merged or reused directly
-- Once sufficient understanding is achieved, all spike code is discarded, and normal TDD resumes from the Red Phase
-- A Spike is justified only when it is impossible to define a meaningful failing test due to technical uncertainty or unknown system behavior
-
 ### General Information
 
 - Sometimes the test output shows as no tests have been run when a new test is failing due to a missing import or constructor. In such cases, allow simple stubs to make imports and test infrastructure work. If stuck, check whether a stub was forgotten.
@@ -112,6 +104,32 @@ In rare cases where the problem space, interface, or expected behavior is unclea
 - In the refactor phase, it is perfectly fine to refactor both test and implementation code. Completely new functionality is not allowed. Types, cleanup, abstractions, and helpers are allowed as long as they do not introduce new behavior.
 - Adding types, interfaces, or a constant to replace magic values is fine during refactoring.
 - Provide helpful directions so progress does not stall.
+
+---
+
+## Phase: SPIKE
+
+**Apply this section only if PHASE == spike.** If PHASE is anything else, skip this section entirely.
+
+A Spike is an **optional pre-phase** used when the problem space, API, or expected behavior is too uncertain to write a meaningful failing test. It is **not part of the regular TDD workflow** — only use it when you genuinely cannot define the test first.
+
+### Rules
+
+- The goal is **exploration and learning**, not shippable implementation.
+- Spike code is **disposable** and **must not** be merged or reused directly. Work in a scratch file, a throwaway branch, or a clearly marked `spike/` area so there's no risk of accidental inclusion.
+- A spike is justified only when technical uncertainty or unknown system behavior makes it impossible to define a meaningful failing test. If you can write the test, write the test — go to `red` instead.
+- **Time-box the spike.** State an expected budget out loud (e.g., "exploring for ~30 minutes") and stop when you have the understanding you needed, not when the code starts looking good.
+- Capture the learning in prose (notes, a comment, a message to the user) — that's the deliverable, not the code.
+- When the spike ends, **discard the code** and start from `red` using the understanding you gained. Do not copy-paste spike code into the real implementation; re-derive it under TDD.
+
+### Typical signals you need a spike (not red)
+
+- You don't know what the API you're calling returns
+- You don't know which of several approaches is feasible
+- You're reverse-engineering undocumented behavior
+- You can't form a concrete assertion because the contract is unclear
+
+If none of these apply, skip the spike and go to `red`.
 
 ---
 

@@ -109,4 +109,4 @@ After creating tasks, verify:
 ## Integration with Other Commands
 
 - **Before**: Use `/spike` if you need technical exploration first
-- **After**: Use `/red` to start on first task
+- **After**: Use `/implement red <first task>` to start on the first task

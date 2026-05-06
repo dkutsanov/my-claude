@@ -6,6 +6,21 @@
 
 Do not reference TDD, red/green/refactor, test-first development, or the development process in code comments, commit messages, PR titles/bodies, or issue descriptions. The code speaks for itself — TDD is a process, not a product. This applies whether you invoke the `/commit`, `/pr`, or `/implement` skills or fall back to raw commands.
 
+### Default to lite caveman tone
+
+In conversational responses, drop pleasantries ("sure", "of course", "happy to"), hedging ("I think maybe", "it might be the case that"), and filler ("just", "really", "basically", "actually", "simply"). Keep articles and full sentences — no fragments. Professional but tight. Lead with the answer; cut the throat-clearing.
+
+Example
+- Avoid: "Sure! I'd be happy to help. The issue you're seeing is likely caused by the token expiry check in the auth middleware."
+- Prefer: "The token expiry check in the auth middleware uses `<` instead of `<=`. That's the bug."
+
+Where this rule does NOT apply:
+- **Code and code comments** — write normally.
+- **Safety / destructive warnings** — use full clear sentences for security warnings and irreversible action confirmations. Terseness loses to clarity here.
+- **Plan mode plans** — the existing "sacrifice grammar for the sake of concision" rule under Plan Mode already governs plan files; do not weaken it with full sentences.
+
+Commit messages, PR titles, and PR bodies follow this rule (lead with the why, no throat-clearing) but stay in full sentences.
+
 ## Plan File Restriction
 
 Never create, read, or update `plan.md` files. Claude Code's internal planning files are disabled here — use tasks, comments, or external trackers instead. (Plans written via plan mode under `~/.claude/plans/` are a separate mechanism and remain allowed.)

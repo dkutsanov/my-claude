@@ -46,37 +46,6 @@ public void process(Data data, ProcessingOptions options) {
 }
 ```
 
-### Utility methods vs constants
-
-```java
-// ❌ BAD
-private static String getDefaultFormat() { return "yyyy-MM-dd"; }
-
-// ✅ GOOD
-private static final String DEFAULT_FORMAT = "yyyy-MM-dd";
-```
-
-## Rationalization Table (Java-specific)
-
-| Excuse | Reality |
-|--------|---------|
-| "This private method is complex so I should document it" | If it's complex, refactor it into smaller, clearer methods. Don't document complexity. |
-| "This helps IDE tooltips" | IDE tooltips are for public APIs. Private methods are implementation details. |
-| "Just brief Javadoc won't hurt" | Any Javadoc on private methods violates the CLAUDE.md rule. No exceptions. |
-| "This algorithm needs explanation" | Add a Design rationale comment at the method/file top explaining the WHY — that's the "Design rationale" category in the CLAUDE.md comment rules. |
-| "This getter has side effects so it needs docs" | If a getter has side effects, it shouldn't be named 'get'. Rename it. |
-
-## Java Code Review Checklist
-
-- [ ] No Javadoc on private methods or constructors
-- [ ] Public method Javadoc adds real value (not obvious from name/signature)
-- [ ] Classes have single, clear responsibilities
-- [ ] Composition used instead of inheritance where appropriate
-- [ ] No unnecessary abstractions or premature generalizations
-- [ ] Constants only extracted when reused
-- [ ] Optional parameters handled via overloads, not `null` sentinels
-- [ ] Code is self-documenting; comments follow the four-category rule
-
 ---
 
 ## Spock Testing (for Java projects)

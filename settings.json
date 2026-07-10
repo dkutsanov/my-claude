@@ -27,7 +27,7 @@
       "WebFetch(domain:github.com)"
     ]
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -75,7 +75,7 @@
     "rust-analyzer-lsp@claude-plugins-official": true
   },
   "effortLevel": "xhigh",
-  "skipAutoPermissionPrompt": true,
   "theme": "light",
-  "terminalProgressBarEnabled": false
+  "terminalProgressBarEnabled": false,
+  "skipAutoPermissionPrompt": true
 }

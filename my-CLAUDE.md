@@ -146,7 +146,7 @@ Tracer bullets comes from the Pragmatic Programmer. When building systems, you w
 
 ## Code Comments
 
-Comments explain what code alone cannot — the WHY, not the WHAT. These four categories carry the most value; use them generously when applicable, not sparingly.
+Comments explain what code alone cannot — the WHY, not the WHAT. Default to no comment: first check whether a better name carries the meaning, and comment only the genuinely non-obvious part. Keep it to a line or two at the point that matters — long prose buries the one load-bearing fact. The four categories below are the ones worth keeping.
 
 ### API/Interface comments
 
@@ -160,7 +160,7 @@ Document public function/class/module boundaries so callers can use them without
 At file-top or module-level, briefly justify the chosen approach vs. obvious alternatives.
 
 - **Why**: Prevents well-meaning refactors from undoing intentional trade-offs.
-- **How to apply**: When the file implements a non-trivial algorithm, protocol, or a design where an obvious alternative was rejected. 2–4 lines, not a dissertation.
+- **How to apply**: When the file implements a non-trivial algorithm, protocol, or a design where an obvious alternative was rejected. A couple of lines, not a dissertation.
 
 ### Teacher/domain comments
 
@@ -179,6 +179,8 @@ Warn when modifying X requires also touching Y elsewhere.
 ### Anti-patterns
 
 - **Restating what code does** — names carry that load; don't write `i++; // increment i`
+- **Change-relative wording** — "re-validate", "changed because of X", "removed since no longer needed" describe the diff, not the code; they turn meaningless at merge. Change rationale goes in the commit message.
+- **Reviewer-directed justification** — why a check is absent or why the change is correct is a conversation with the reviewer; it belongs on the PR thread, not in the source.
 - **Commenting-out code** — delete it; let VCS remember it
 - **TODO/FIXME in source** — put them in design docs or issue trackers
 

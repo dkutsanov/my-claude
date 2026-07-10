@@ -1,7 +1,7 @@
 ---
 name: pr
 description: Use when the user asks to create, open, or put up a pull request for the current branch. Handles branch push, PR creation via GitHub MCP, issue linking, assignee assignment, and label application. Do NOT use to review PRs, update descriptions on already-open PRs, or look up PR status — those are separate concerns.
-allowed-tools: Bash(git status:*), Bash(git log:*), Bash(git push:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(git branch:*), Bash(gh pr edit:*), Bash(gh pr view:*)
+allowed-tools: Bash(git status:*), Bash(git log:*), Bash(git push:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(git branch:*), Bash(gh pr edit:*), Bash(gh pr view:*), Bash(gh pr list:*)
 ---
 
 # Create Pull Request
@@ -29,26 +29,25 @@ Check whether the target repo has a `CLAUDE.md` declaring a title convention (e.
 
 Keep the title short (under ~70 chars). Put detail in the body.
 
-### 3. Write the PR body
+### 3. Match repo PR conventions (MANDATORY — do not skip)
 
-Default template:
+Before writing the body, sample what the repo actually does:
 
-```markdown
-## References
-
-- <links to github issues or Jira tickets referenced in commit messages>
-
-## Summary
-
-<1-3 bullets describing what changed and why>
-
-## Test Plan
-
-- [ ] <specific verification steps>
-- [ ] Tests pass
+```
+gh pr list --repo <owner>/<repo> --state merged --limit 10 --json number,title,body
 ```
 
-Populate `References` from any `#123`, `owner/repo#123`, or `JIRA-XXX` patterns found in commit messages or branch name.
+Read the bodies. Identify:
+
+- **Dominant section headers** (e.g. `### Basic info` / `### Technical details`, or `## Summary` / `### Considerations for prod deployments`, or `## Jira ticket` / `### Description`). Repos often have a fixed template — match it verbatim.
+- **Jira/issue link format** — bare URL, `[KEY](url)`, or footnote-style reference. Match the dominant form.
+- **Median length** of PRs in the same category (cleanup vs. feature vs. fix vs. release). Pick a similar-shaped PR and match its skeleton.
+
+Then write the body matching the closest-shaped recent PR. Aim for the median length — if yours is the longest in the sample, cut it. Default to concise; reviewers can ask for more detail if needed.
+
+**There is no generic fallback template.** If the sample is mixed, pick the convention used by the most recent 3 PRs of the same category. If the repo is brand new with no prior PRs, ask the user which template to use.
+
+Populate references (Jira, GH issues) from `#123`, `owner/repo#123`, or `JIRA-XXX` patterns found in commit messages or branch name, in whatever format the repo uses.
 
 ### 4. Create the PR
 

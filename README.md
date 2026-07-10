@@ -1,12 +1,23 @@
-# my-claude
+# my-agent
 
-Claude Code customization repository containing agents, commands, and skills for Java development with TDD discipline.
+Agent-agnostic customization repository: shared instructions, skills, and command prompts for coding agents (Claude Code and Codex), plus per-agent configuration.
 
 ## Structure
 
-- `agents/` - Specialized AI agents
-- `commands/` - Slash commands for TDD workflow and git operations
-- `skills/` - Reusable skill definitions
+- `my-AGENTS.md` — global instructions, installed as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`
+- `skills/` — skill definitions (SKILL.md format), shared by both agents
+- `commands/` — slash-command / custom-prompt markdown, shared by both agents
+- `claude/` — Claude Code-specific: `settings.json`, `hooks/`, subagents in `agents/`
+- `codex/` — Codex-specific configuration (added as needed)
+
+## Install / update
+
+```bash
+./install.sh          # sync symlinks into ~/.claude (and ~/.codex when codex is installed)
+./install.sh --pull   # pull latest, then sync
+```
+
+The script is idempotent — installing and updating are the same operation. Re-run it after pulling, moving the repo, or a layout change; it heals broken links and cleans up links from older layouts.
 
 ## License
 

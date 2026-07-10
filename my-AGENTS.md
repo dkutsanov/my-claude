@@ -97,7 +97,7 @@ Ground rules for the architect:
 - Write the output to `design-options.md` with a comparison matrix
 - Leave the implementation planning to `/create-tasks` and `/implement`
 
-The local `researcher` agent (see `agents/researcher.md`) has stricter guardrails than the built-in: output goes to `docs/research/YYYY-MM-DD-<topic>.md`, no "you should" / recommendations, precise `path/file.ext:line` references. Those guardrails are what make it worth keeping as a user-defined agent.
+The local `researcher` agent (see `claude/agents/researcher.md`) has stricter guardrails than the built-in: output goes to `docs/research/YYYY-MM-DD-<topic>.md`, no "you should" / recommendations, precise `path/file.ext:line` references. Those guardrails are what make it worth keeping as a user-defined agent.
 
 ## Research Before Design Decisions
 

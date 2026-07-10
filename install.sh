@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Sync this repo's customizations into ~/.claude (and ~/.codex if installed).
-# Idempotent: re-running fixes drift, picks up new entries, and removes stale
-# symlinks for sources that no longer exist.
+# Idempotent: installing and updating are the same operation. Re-running fixes
+# drift, picks up new entries, heals links broken by a repo move, replaces
+# links from older layouts of this repo, and removes stale ones.
 #
 # Usage:
 #   ./install.sh           # sync only
@@ -15,7 +16,7 @@ PULL=0
 for arg in "$@"; do
     case "$arg" in
         --pull) PULL=1 ;;
-        -h|--help) sed -n '2,11p' "$0"; exit 0 ;;
+        -h|--help) sed -n '2,10p' "$0"; exit 0 ;;
         *) echo "unknown arg: $arg" >&2; exit 2 ;;
     esac
 done
@@ -82,23 +83,42 @@ sync_per_entry() {
     done
 }
 
+# Remove a broken symlink at a target this repo managed in an older layout.
+# Only broken links are touched — anything the user re-pointed at a real
+# location is left alone.
+clean_stale() {
+    local tgt="$1"
+    if [[ -L "$tgt" ]] && [[ ! -e "$tgt" ]]; then
+        rm "$tgt"
+        echo "[clean] $tgt (legacy layout)"
+    fi
+}
+
 install_claude() {
     mkdir -p "$HOME/.claude"
-    link_one "$REPO_ROOT/agents"        "$HOME/.claude/agents"
-    link_one "$REPO_ROOT/commands"      "$HOME/.claude/commands"
-    link_one "$REPO_ROOT/skills"        "$HOME/.claude/skills"
-    link_one "$REPO_ROOT/memory"        "$HOME/.claude/memory"
-    link_one "$REPO_ROOT/settings.json" "$HOME/.claude/settings.json"
-    link_one "$REPO_ROOT/statusline.sh" "$HOME/.claude/statusline.sh"
-    link_one "$REPO_ROOT/my-CLAUDE.md"  "$HOME/.claude/CLAUDE.md"
-    sync_per_entry "$REPO_ROOT/hooks"   "$HOME/.claude/hooks"
+    link_one "$REPO_ROOT/my-AGENTS.md"         "$HOME/.claude/CLAUDE.md"
+    link_one "$REPO_ROOT/commands"             "$HOME/.claude/commands"
+    link_one "$REPO_ROOT/skills"               "$HOME/.claude/skills"
+    link_one "$REPO_ROOT/claude/agents"        "$HOME/.claude/agents"
+    link_one "$REPO_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
+    sync_per_entry "$REPO_ROOT/claude/hooks"   "$HOME/.claude/hooks"
+
+    clean_stale "$HOME/.claude/memory"
+    clean_stale "$HOME/.claude/statusline.sh"
 }
 
 install_codex() {
     mkdir -p "$HOME/.codex"
-    link_one "$REPO_ROOT/agents"   "$HOME/.codex/agents"
-    link_one "$REPO_ROOT/commands" "$HOME/.codex/commands"
-    link_one "$REPO_ROOT/skills"   "$HOME/.codex/skills"
+    # Codex reads global guidance from ~/.codex/AGENTS.md, slash-command
+    # prompts from ~/.codex/prompts, and skills from ~/.codex/skills.
+    # Verify these paths against the installed codex version on first install.
+    link_one "$REPO_ROOT/my-AGENTS.md"       "$HOME/.codex/AGENTS.md"
+    link_one "$REPO_ROOT/commands"           "$HOME/.codex/prompts"
+    link_one "$REPO_ROOT/skills"             "$HOME/.codex/skills"
+    link_one "$REPO_ROOT/codex/config.toml"  "$HOME/.codex/config.toml"
+
+    clean_stale "$HOME/.codex/commands"
+    clean_stale "$HOME/.codex/agents"
 }
 
 main() {

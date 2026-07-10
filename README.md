@@ -1,4 +1,4 @@
-# my-agent
+# my-agents
 
 Agent-agnostic customization repository: shared instructions, skills, and command prompts for coding agents (Claude Code and Codex), plus per-agent configuration.
 

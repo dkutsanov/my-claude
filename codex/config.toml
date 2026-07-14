@@ -1,0 +1,4 @@
+# Ring the tmux bell when Codex needs attention so the tab name turns orange
+# (see monitor-bell in dot-files tmux config). Codex appends a JSON payload as
+# the last argument; the script ignores it.
+notify = ["bash", "-c", "\"$HOME/.tmux-bell.sh\""]

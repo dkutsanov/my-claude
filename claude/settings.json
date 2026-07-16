@@ -22,9 +22,10 @@
       "Bash(pkill:*)",
       "Bash(kill:*)",
       "Bash(ps aux:*)",
-      "Bash(done)",
       "WebSearch",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "mcp__claude_ai_Atlassian__getJiraIssue",
+      "mcp__claude_ai_Atlassian__getTransitionsForJiraIssue"
     ]
   },
   "model": "claude-fable-5[1m]",

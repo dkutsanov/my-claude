@@ -3,6 +3,7 @@
     "ENABLE_LSP_TOOL": "1"
   },
   "permissions": {
+    "defaultMode": "bypassPermissions",
     "allow": [
       "Bash(git:*)",
       "Bash(ls:*)",

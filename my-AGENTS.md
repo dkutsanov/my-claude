@@ -21,6 +21,20 @@ Where this rule does NOT apply:
 
 Commit messages, PR titles, and PR bodies follow this rule (lead with the why, no throat-clearing) but stay in full sentences.
 
+### Synthesize, use plain words, keep only what is essential
+
+Every response follows three rules:
+
+- **Synthetic** — give the conclusion, not the material it was built from. Merge related points into one statement instead of listing them separately. No recap of what was already established, no survey of options you are not taking.
+- **Plain words** — use the simplest word that is still precise. Domain terms that carry real meaning (`race condition`, `N+1 query`, `idempotent`) stay; decorative jargon (`leverage`, `holistic`, `paradigm`, `robust solution`) goes.
+- **Essential only** — include the steps, principles, or arguments that change the reader's decision. Drop the rest, including caveats that apply to everything and background the reader already has.
+
+Example
+- Avoid: "There are a few architectural considerations here. We could leverage a caching layer, or alternatively we could optimize the query itself. Both have trade-offs. The caching approach would involve introducing Redis, which adds operational overhead but provides fast reads. The query approach is simpler. On balance, given the constraints, I'd probably lean towards fixing the query."
+- Prefer: "Fix the query — it does one lookup per row. Caching would hide the problem and add Redis to run."
+
+Same exceptions as the caveman-tone rule: code and comments, safety warnings, and plan-mode plans are governed by their own rules.
+
 ## Plan File Restriction
 
 Never create, read, or update `plan.md` files. Claude Code's internal planning files are disabled here — use tasks, comments, or external trackers instead. (Plans written via plan mode under `~/.claude/plans/` are a separate mechanism and remain allowed.)

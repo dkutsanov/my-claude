@@ -3,7 +3,6 @@
     "ENABLE_LSP_TOOL": "1"
   },
   "permissions": {
-    "defaultMode": "bypassPermissions",
     "allow": [
       "Bash(git:*)",
       "Bash(ls:*)",
@@ -33,7 +32,8 @@
       "mcp__claude_ai_Atlassian__transitionJiraIssue",
       "mcp__claude_ai_Atlassian__createIssueLink",
       "Skill"
-    ]
+    ],
+    "defaultMode": "bypassPermissions"
   },
   "model": "opus[1m]",
   "hooks": {
@@ -83,6 +83,7 @@
     "rust-analyzer-lsp@claude-plugins-official": true
   },
   "effortLevel": "xhigh",
+  "skipDangerousModePermissionPrompt": true,
   "theme": "light",
   "terminalProgressBarEnabled": false,
   "skipAutoPermissionPrompt": true

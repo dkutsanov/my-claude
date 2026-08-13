@@ -1,69 +1,49 @@
 ---
 name: implement
-description: Use when the user asks to implement a feature, add a class or method, fix a bug, refactor code, add test coverage, run autonomously to drive work forward, or explore an unfamiliar problem space with throwaway code. Supports explicit phase selection via the first argument (spike | red | green | refactor | forever) and infers the phase from conversation and test state when no phase is given. With no arguments at all, defaults to forever (autonomous loop). Do NOT use for code review, CI/CD setup, testing questions, infrastructure, or documentation tasks.
+description: Use when the user asks to implement a feature, add a class or method, fix a bug, refactor code, or add test coverage. The work is designed, implemented with tests, and verified. Do NOT use for code review, CI/CD setup, testing questions, infrastructure, or documentation tasks.
 ---
 
 # Implement
 
-Drive work through the test-first cycle: one failing test (red) → minimal code to pass it (green) → clean up on green (refactor), with an optional spike pre-phase and an autonomous `forever` driver. Apply the **Shared Rules** plus **exactly one** Phase section per invocation — each phase has its own strictness contract, and mixing them weakens all of them.
+Build the requested behavior together with the tests that verify it.
 
-## Phase Dispatch
+`$ARGUMENTS` is the work description. Empty → take the obvious next thing from the conversation, or `bd ready` if Beads is available.
 
-Read `$ARGUMENTS` (the user's input after the skill name).
+## 1. Agree the scenarios
 
-1. **No arguments** → `PHASE = forever`.
-2. **First token matches `{spike, red, green, refactor, forever}`** (case-insensitive) → that phase. The remainder is `CONTEXT` (exploration topic, test name, implementation description, refactoring goal, or loop seed).
-3. **Otherwise infer** from the conversation and current test state:
-   - Exploring unknowns ("I don't know how X works", "figure out the API") → `spike`
-   - New behavior described, no relevant failing test → `red`
-   - Exactly one relevant failing test → `green`
-   - All green and the ask is cleanup / rename / extract → `refactor`
-   - "continue", "keep going", "drive", "go" → `forever`
-   - Unclear → `red` (safest default; starts a fresh cycle)
+- Source them in order: explicit scenarios in the request → Given-When-Then acceptance criteria on the task → the design doc.
+- With none available, write the list yourself — one line per behavior, happy path plus edge cases — and get it confirmed. Prose, not test code.
+- Ambiguous edge cases are questions for the user.
 
-Before acting, state the phase in one short line — `Entering <PHASE> phase.` — so the user can correct it.
+## 2. Design before coding
 
-## Shared Rules (all phases)
+- State the shape of the change — modules, boundaries, data flow — in a few lines before writing code.
+- Match how the codebase already solves similar problems (see the global CLAUDE.md rules on least surprise and consistency).
 
-- **The cycle is the contract.** Never introduce logic without a failing test demanding it; never refactor on red; each step addresses exactly one issue. Stubs that make imports and test infrastructure work are always fine — logic without a failing test is not.
-- **The process stays invisible.** The global CLAUDE.md rules on never mentioning TDD, comment discipline, and plan-file restrictions apply to everything this skill produces.
-- **Task tracking.** Use the harness task tools; if Beads is available, mirror through `bd` / `mcp__beads__*`.
-- **No context given?** Take the obvious next thing from the conversation, or `bd ready` if Beads is available.
+## 3. Implement with tests
 
-## Phase: SPIKE
-
-An optional pre-phase for when uncertainty makes a meaningful failing test impossible to write — unknown API returns, unclear feasibility, undocumented behavior. If you can write the test, skip the spike and go to `red`.
-
-- The deliverable is **understanding, captured in prose** — the code is disposable. Work in a scratch area so nothing leaks into the real implementation.
-- State a time budget up front and stop when you've learned what you needed, not when the code looks good.
-- Afterwards, discard the code and start from `red`, re-deriving the implementation under the cycle rather than pasting spike code in.
-
-## Phase: RED
-
-- Add exactly **one** failing test describing the desired behavior. Adding a single test is always allowed — no prior test output needed, and starting on a new feature is valid even if other work is in flight.
-- It must fail for the **right reason**: a behavioral assertion, not a syntax or import error. If the failure is a missing import/constructor, add the minimal stub and re-run until the failure is behavioral.
+- Every agreed scenario ends up as a test; the writing order is yours to choose.
 - Structure: Arrange (minimal setup) → Act (one action) → Assert (specific expectations).
-- For DOM tests, select via `data-testid`, not CSS classes or text. No `sleep()` or hard-coded timeouts — use `waitFor`/`findBy*`/event-based sync.
-- Exception for expensive setup (browser tests, Storybook stories): extend an existing interaction flow with more assertions rather than duplicating the setup; genuinely new interactions still get a new test.
+- Expected values come from the scenario, hand computation, or a known-good fixture.
+- A test that fails against an agreed scenario is a finding to report; changing that test needs the user's agreement.
+- For DOM tests, select via `data-testid` and synchronize with `waitFor`/`findBy*`/events.
+- Expensive setup (browser tests, Storybook stories): extend an existing interaction flow with more assertions; genuinely new interactions get their own test.
 
-## Phase: GREEN
+## 4. Verify
 
-- Write the **minimal** code that makes the one failing test pass, matching the failure message one step at a time: "not defined" → empty stub; "not a function" → method stub; assertion failure → the minimal logic.
-- No anticipatory features, no second test, no refactoring of untested code. Ugly-but-green is fine — that's what refactor is for.
+- Run the relevant suite and report the real output.
+- **Strength check.** Where mutation testing is configured for the module, run it scoped to the changed classes and address the survivors. Otherwise break the behavior each new test targets, confirm the test fails, then revert the break.
+- Run the project's coverage, lint, and static analysis, and act on what they report.
 
-## Phase: REFACTOR
+## 5. Clean up
 
-- Precondition: relevant tests are green and were run recently. If not, switch to the phase that fixes them.
-- Improve structure — implementation **and** test code — without adding behavior. Types, renames, extractions, and named constants are fine.
+- Improve structure in implementation **and** test code without changing behavior: types, renames, extractions, named constants.
 - Targets: deep nesting, long functions, real duplication, single-implementation abstractions, dead code, magic values, patterns inconsistent with the surrounding codebase.
-- If a pure refactor breaks tests, suspect the tests: they may assert implementation details rather than behavior. Fix the test, don't contort the code.
+- Trigger from what the diff and the tools show — a static-analysis warning, a module that grew too big.
+- When a pure structural change breaks a test, suspect the test asserts implementation details; fix the test.
 
-## Phase: FOREVER
+## Shared rules
 
-Run autonomously until interrupted or genuinely stuck.
-
-1. **Find work**, in order: the `CONTEXT` seed → unfinished conversation threads → coverage gaps or incomplete implementations → `git status` → `bd ready` → whatever would most improve the codebase.
-2. **Execute** through the cycle: announce the current sub-phase (red / green / refactor) before each code action and apply that phase's section. Make atomic, committable progress and commit as you go — the trail is what survives context limits.
-3. **Continue or pivot**: more related work → continue; blocked → note the blocker and switch tasks; repeated failures → try a different approach or a different task.
-
-Stop only when the user interrupts, no work can be identified, or a decision genuinely needs human judgment. Work quietly: report completions, surface decisions that need input, skip the play-by-play.
+- The global CLAUDE.md rules apply throughout: Output Style (synthesis, plain words, essentials only) for the scenario list and progress reports, plus artifacts, comment discipline, and plan files.
+- **Task tracking.** Use the harness task tools; if Beads is available, mirror through `bd` / `mcp__beads__*`.
+- **Commit as you go.** Atomic, committable progress survives context limits.

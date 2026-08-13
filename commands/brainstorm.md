@@ -17,6 +17,7 @@ $ARGUMENTS
 - After 2-3 questions, propose 2-3 distinct approaches with trade-offs. Lead with your recommendation and the reason.
 - Once the shape is clear, present the design in 200-300-word sections (architecture, components, data flow, error handling, testing). Check alignment after each section.
 - Stay high-level until implementation — see the global CLAUDE.md "Brainstorming Sessions" section for what counts as too-low-level.
+- Dialogue and design doc both follow the global CLAUDE.md Output Style rules: conclusions over the material behind them, plain words, essentials only.
 
 ## When done
 

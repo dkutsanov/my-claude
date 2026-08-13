@@ -2,9 +2,9 @@
 
 ## Output Style
 
-### Never mention TDD in the artifact
+### Never mention the development process in the artifact
 
-Do not reference TDD, red/green/refactor, test-first development, or the development process in code comments, commit messages, PR titles/bodies, or issue descriptions. The code speaks for itself — TDD is a process, not a product. This applies whether you invoke the `/commit`, `/pr`, or `/implement` skills or fall back to raw commands.
+Do not reference TDD, red/green/refactor, test-first development, or the development process in code comments, commit messages, PR titles/bodies, or issue descriptions. The code speaks for itself — how it got written is a process, not a product. This applies whether you invoke the `/commit`, `/pr`, or `/implement` skills or fall back to raw commands.
 
 ### Default to lite caveman tone
 
@@ -34,6 +34,16 @@ Example
 - Prefer: "Fix the query — it does one lookup per row. Caching would hide the problem and add Redis to run."
 
 Same exceptions as the caveman-tone rule: code and comments, safety warnings, and plan-mode plans are governed by their own rules.
+
+### Describe the correct behaviour, not the rejected one
+
+When I ask to remove, change, or fix something, delete the old reference and state what to do instead. Removal means the text is gone — an absence carries the instruction on its own, and the result is lighter than what it replaced.
+
+Add an explicit prohibition only where the design calls for a guardrail or I ask for one. Applies to code, docs, instructions, commit messages, and prose alike.
+
+Example
+- Avoid: "This skill no longer uses the old cycle; do not reintroduce it."
+- Prefer: describe the flow the skill does use, and let the old cycle go unmentioned.
 
 ## Plan File Restriction
 
@@ -128,13 +138,30 @@ The local `researcher` agent (see `claude/agents/researcher.md`) has stricter gu
 - Good: "Let me spawn a researcher agent to check if customer settings are used for auth computation"
 - Bad: "Customer settings seem like feature flags, let's keep them as live calls"
 
+## Testing
+
+### Tests come from agreed scenarios
+
+Agree the scenarios with me, design the change, then implement behavior and tests together.
+
+- **Why**: Scenarios I have approved are what give the tests their meaning; deciding the order in which tests and code get written is a human's tool, and the benefit stays with the human ([TDD in the agent loop](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)).
+- **How to apply**: Take the scenarios from the request, the task's Given-When-Then acceptance criteria, or the design doc; where none exist, propose a list and get it confirmed. Every agreed scenario ends up as a test. A test that fails against an agreed scenario is a finding to report; changing that test needs my agreement.
+
+### Verify test strength, not test count
+
+A passing test counts once you know it can fail.
+
+- **Why**: Coverage says a line ran, not that an assertion would catch a bug there.
+- **How to apply**: Where mutation testing is configured, run it scoped to the changed classes and address the survivors. Otherwise break the behavior each new test targets, confirm the test fails, then revert the break. Expected values come from the scenario, hand computation, or a known-good fixture.
+
 ## Bug Fixing Process
 
   When fixing bugs, the user expects:
 
   1. **Write a failing test FIRST** that reproduces the bug
-  2. **Only then** implement the fix
-  3. Verify the test passes
+  2. **Show me the failure output** and name the diagnosed cause it confirms
+  3. **Only then** implement the fix
+  4. Verify the test passes
 
   Example:
 

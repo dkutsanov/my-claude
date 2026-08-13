@@ -30,3 +30,5 @@ Create a concise summary of the current conversation suitable for transferring c
 ## Output Format
 
 Keep the summary concise and actionable - suitable for pasting into a new conversation to quickly restore context without needing the full conversation history.
+
+Follow the global CLAUDE.md Output Style rules: carry the decisions and their reasons, in plain words, and leave the path that led to them behind.

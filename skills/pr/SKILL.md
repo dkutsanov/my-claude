@@ -10,7 +10,8 @@ Create a pull request for the current branch using GitHub MCP tools. Use `gh` CL
 
 ## Output Style
 
-- Never explicitly mention TDD in commits, PRs, or issues. The code speaks for itself; TDD is the process, not the product.
+- Never mention the development process (TDD, red/green, test-first) in commits, PRs, or issues. The code speaks for itself; how it got written is not the product.
+- Title and body follow the global CLAUDE.md Output Style rules: lead with the why, plain words, essentials only, full sentences.
 
 ## Process
 

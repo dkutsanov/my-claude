@@ -30,7 +30,7 @@ Then apply **Shared Rules** plus the matching **Mode: <MODE>** section.
 
 2. **No AI attribution**: NEVER add `Co-Authored-By` trailer lines to commit messages (e.g. `Co-Authored-By: Claude <...>`). The user does not want AI attribution in git history. This rule applies whether you invoke this skill or fall back to a raw `git commit` command. Also never include "Generated with Claude Code" or similar.
 
-3. **Content**: Write clear, concise commit messages describing what changed and why. Focus on the actual changes, not conversation history.
+3. **Content**: Describe what changed and why, following the global CLAUDE.md Output Style rules — lead with the why, plain words, essentials only, full sentences. Focus on the actual changes, not conversation history.
 
 ### Pre-commit Checks (both modes)
 

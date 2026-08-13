@@ -61,6 +61,7 @@ Broadly applicable learnings about working with this user. These must be general
 
 ## Guidelines
 
+- Write each snippet under the global CLAUDE.md Output Style rules — it becomes an instruction someone reads every session, so plain words and essentials only
 - Be specific and actionable, not vague
 - Include concrete examples from the conversation
 - Keep each snippet self-contained and copy-paste ready

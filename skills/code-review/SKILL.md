@@ -8,6 +8,8 @@ allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git log:*), Bash(git r
 
 Perform a code review using dynamic category detection.
 
+Findings, briefs, and summaries follow the global CLAUDE.md Output Style rules: state the defect and what it costs, in plain words, and stop there.
+
 ## Phase 0: Setup & Categorization
 
 ### Determine What to Review
@@ -171,11 +173,12 @@ For each detected category with changes, run a targeted review. Skip categories 
 | **Repeatable** | No Date.now(), no Math.random() without seeding, no external service dependencies |
 | **Self-validating** | Meaningful assertions that verify behavior, no manual verification needed |
 
-#### TDD Anti-patterns
+#### Test Anti-patterns
 
 | Anti-pattern | Detection Signals |
 |--------------|-------------------|
 | **The Liar** | `expect(true).toBe(true)`, empty test bodies, tests with no assertions |
+| **The Tautology** | Expected value produced by calling the code under test, or re-derived with the same helper/formula the implementation uses — the test passes whatever the code does |
 | **Excessive Setup** | >20 lines of arrange code, >5 mocks, deep nested object construction |
 | **The One** | >5 assertions testing unrelated behaviors in a single test |
 | **The Peeping Tom** | Testing private methods, asserting on internal state, tests that break on any refactor |

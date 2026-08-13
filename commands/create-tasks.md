@@ -44,6 +44,10 @@ Why this task exists and how it fits the larger feature.
 - Each bullet must be concretely verifiable
 ```
 
+The acceptance criteria are the test scenarios `/implement` builds against — write them as observable behaviors.
+
+Descriptions follow the global CLAUDE.md Output Style rules: enough for someone to start the task, in plain words, without restating the design doc.
+
 ## Dependencies
 
 After creation, call `TaskUpdate` on each task with:
@@ -67,8 +71,8 @@ Use `bd dep add` to mirror the task dependencies.
 
 - [ ] Each task has concrete Given-When-Then acceptance criteria
 - [ ] Dependencies reflect real ordering (no cycles, first task is unblocked)
-- [ ] Each task is small enough to finish in one TDD cycle
+- [ ] Each task is small enough to implement and verify in one sitting
 
 ## Next command
 
-- Run `/implement red <first task>` to start on the top unblocked task.
+- Run `/implement <first task>` to start on the top unblocked task.

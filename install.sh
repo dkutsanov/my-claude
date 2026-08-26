@@ -98,7 +98,16 @@ install_claude() {
     mkdir -p "$HOME/.claude"
     link_one "$REPO_ROOT/my-AGENTS.md"         "$HOME/.claude/CLAUDE.md"
     link_one "$REPO_ROOT/commands"             "$HOME/.claude/commands"
-    link_one "$REPO_ROOT/skills"               "$HOME/.claude/skills"
+
+    # Skills merge shared entries with Claude-only ones, so the target is a
+    # real per-entry-synced dir rather than a whole-dir link. Break a
+    # pre-existing whole-dir link from the older layout first.
+    if [[ -L "$HOME/.claude/skills" ]]; then
+        rm "$HOME/.claude/skills"
+        echo "[clean] $HOME/.claude/skills (legacy whole-dir layout)"
+    fi
+    sync_per_entry "$REPO_ROOT/skills"         "$HOME/.claude/skills"
+    sync_per_entry "$REPO_ROOT/claude/skills"  "$HOME/.claude/skills"
     link_one "$REPO_ROOT/claude/agents"        "$HOME/.claude/agents"
     link_one "$REPO_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
     sync_per_entry "$REPO_ROOT/claude/hooks"   "$HOME/.claude/hooks"

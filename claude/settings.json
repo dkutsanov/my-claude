@@ -46,6 +46,15 @@
             "command": "~/.claude/hooks/allow-safe-compound-bash.sh"
           }
         ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/opt/draios/bin/claude-interceptor"
+          }
+        ]
       }
     ],
     "SessionEnd": [
